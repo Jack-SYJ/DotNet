@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Jack.TimerTask": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "dev"
+      }
+    }
+  }
+}
