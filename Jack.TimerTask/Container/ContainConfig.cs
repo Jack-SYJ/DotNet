@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Jack.TimerTask.Service;
+using Quartz.Logging;
+using Jack.TimerTask.JobScheduler;
 
 namespace Jack.TimerTask.Jobs
 {
@@ -16,6 +18,7 @@ namespace Jack.TimerTask.Jobs
         /// <returns></returns>
         public static ContainerBuilder RegisterModule(this ContainerBuilder cb)
         {
+            LogProvider.SetCurrentLogProvider(new JobLogProvider());
             // 1) Register IScheduler
             cb.RegisterModule(new QuartzAutofacFactoryModule());
             // 2) Register jobs

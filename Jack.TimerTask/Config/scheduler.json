@@ -8,13 +8,13 @@
         //从LDAP同步组织及员工信息
         "Open": true, //功能开关
         //事件发布
-        "Name": "SyncOrgAndEmpFromLdapJob_Trigger",
+        "Name": "SyncJob_Trigger",
         //分组
         "Group": "FBG_AdminUserCenter_Job_Triggers",
         //表达式（15分钟执行一次） 0 */15 * * * ?
         "Expression": "0 */1 * * * ?",
-        "JobType": "Jack.TimerTask.Jobs.SyncOrgAndEmpFromLdapJob,Jack.TimerTask",
-        "JobName": "FBG_AdminUserCenter_Job_SyncOrgAndEmpFromLdapJob",
+        "JobType": "Jack.TimerTask.Jobs.SyncJob,Jack.TimerTask",
+        "JobName": "FBG_AdminUserCenter_Job_SyncJob",
         "JobGroup": "FBG_AdminUserCenter_Job_Group"
       }
     ]
