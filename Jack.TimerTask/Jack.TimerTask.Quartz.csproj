@@ -25,7 +25,8 @@
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.1.0" />
     <PackageReference Include="Autofac.Extras.Quartz" Version="6.0.1" />
     <PackageReference Include="Castle.Core" Version="4.4.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" /> 
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="5.0.0" /> 
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="3.1.7" /> 
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="5.0.0" /> 
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />

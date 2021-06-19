@@ -10,8 +10,8 @@ namespace Jack.TimerTask.Service
     {
         public static IServiceCollection AddHttpUserCenterService(this IServiceCollection services)
         {
-            services.AddTransient<ILdapService, LdapService>();
-            services.AddTransient<IRequestService, RequestService>();
+            ///services.AddTransient<ILdapService, LdapService>();
+            //services.AddTransient<IRequestService, RequestService>();
             return services;
         }
     }

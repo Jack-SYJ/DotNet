@@ -58,10 +58,10 @@ namespace Jack.TimerTask
                  .ConfigureHostConfiguration(configHost =>
                  {
                      configHost.SetBasePath(Directory.GetCurrentDirectory())
-                            .AddJsonFileEx("Config/appsettings.json", optional: true)
-                            .AddJsonFileEx("Config/scheduler.json", optional: true)
-                            .AddEnvironmentVariables()
-                          .AddCommandLine(args);
+                     .AddJsonFileEx("Config/appsettings.json", optional: true)
+                     .AddJsonFileEx("Config/scheduler.json", optional: true)
+                     .AddEnvironmentVariables()
+                     .AddCommandLine(args);
                  })
                  .ConfigureServices((hostContext, services) =>
                  { 

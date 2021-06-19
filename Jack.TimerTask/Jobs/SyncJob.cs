@@ -15,30 +15,34 @@ namespace Jack.TimerTask.Jobs
     /// 从LDAP 同步组织及员工
     /// </summary>
     [DisallowConcurrentExecution]
-    public class SyncOrgAndEmpFromLdapJob : IJob
+    public class SyncJob : IJob
     {
-        private readonly ILdapService _ldapService;
         private IOptionsSnapshot<AppSettingConfiguration> _options;
       
 
 
-        public SyncOrgAndEmpFromLdapJob(IOptionsSnapshot<AppSettingConfiguration> options, ILdapService ldapService)
+        public SyncJob(IOptionsSnapshot<AppSettingConfiguration> options)
         {
-            this._ldapService = ldapService;
             this._options = options;
         }
 
-        public async Task Execute(IJobExecutionContext context)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public  Task Execute(IJobExecutionContext context)
         {
             try
             {
                 
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e);
-                throw;
+                Console.WriteLine(ex);
+               // throw ex;
             }
+            return Task.CompletedTask;
         }
     }
 }

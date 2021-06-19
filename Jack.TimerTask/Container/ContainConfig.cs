@@ -19,7 +19,7 @@ namespace Jack.TimerTask.Jobs
             // 1) Register IScheduler
             cb.RegisterModule(new QuartzAutofacFactoryModule());
             // 2) Register jobs
-            cb.RegisterModule(new QuartzAutofacJobsModule(typeof(SyncOrgAndEmpFromLdapJob).Assembly));
+            cb.RegisterModule(new QuartzAutofacJobsModule(typeof(SyncJob).Assembly));
               
             return cb;
         }
