@@ -13,7 +13,7 @@ namespace Jack.TimerTask.JobScheduler
     /// </summary>
     public class JobLogProvider : ILogProvider
     {
-        ILogger<JobLogProvider> _logger;
+       // ILogger<JobLogProvider> _logger;
         //public JobLogProvider(ILogger<JobLogProvider> logger)
         //{
         //    _logger = logger;
