@@ -12,40 +12,13 @@ namespace Jack.Extend.MySQL
 {
     public static class IEnumerableExtend
     {
-        /// <summary>
-        ///  返回拼接好的sql，
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="values"></param>
-        /// <returns></returns>
-        public static string CreateBulkSql<T>(this IEnumerable<T> values) where T : class
-        {
-        //    if (!values.HasValue())
-        //    {
-        //        throw new ArgumentNullException("must value");
-        //    }
-
-            return CreateSql(values);
-        }
-
-
-        public static Tuple<string, IDbDataParameter> GetParameterBulk<T>(this IEnumerable<T> values) where T : class
-        {
-
-            //if (!values.HasValue())
-            //{
-            //    throw new ArgumentNullException("must value");
-            //}
-
-            return null;
-        }
 
         private static ConcurrentDictionary<Type, EntityProperties> CacheTypeDic = new ConcurrentDictionary<Type, EntityProperties>();
 
 
 
         /// <summary>
-        ///
+        ///返回拼接好的sql，无参
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="values"></param>
@@ -245,6 +218,7 @@ namespace Jack.Extend.MySQL
         {
             return entityType.Name;
         }
+
 
     }
 }
