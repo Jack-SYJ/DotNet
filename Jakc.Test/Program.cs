@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Jack.Extend;
+using Jack.Extend.MySQL;
 using System.Threading;
 namespace Jakc.Test
 {

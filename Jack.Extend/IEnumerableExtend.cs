@@ -5,8 +5,6 @@ using System.Linq;
 using System.Data;
 using System.Collections;
 using System.Reflection;
-using System.Collections.Concurrent;
-using System.Data.Common;
 
 namespace Jack.Extend
 {

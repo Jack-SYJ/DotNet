@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30711.63
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jack.Extend", "DBExtend\Jack.Extend.csproj", "{151226C3-C44F-4F91-B2B0-2A16A9A98C60}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jack.TimerTask.Quartz", "Jack.TimerTask\Jack.TimerTask.Quartz.csproj", "{AB1E6F08-EDA8-4AD8-9C15-B481AAEC3FBA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jakc.Test", "Jakc.Test\Jakc.Test.csproj", "{27D0055C-6134-4594-AA29-04A8A09A5676}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jack.Extend.MySQL", "Jakc.Extend.MySQL\Jack.Extend.MySQL.csproj", "{D7E131B6-BA8E-4AD4-8456-0CAD85309859}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jack.Extend", "Jack.Extend\Jack.Extend.csproj", "{8741B50E-AB3C-4A14-9164-6A044A114DD4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{151226C3-C44F-4F91-B2B0-2A16A9A98C60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{151226C3-C44F-4F91-B2B0-2A16A9A98C60}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{151226C3-C44F-4F91-B2B0-2A16A9A98C60}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{151226C3-C44F-4F91-B2B0-2A16A9A98C60}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AB1E6F08-EDA8-4AD8-9C15-B481AAEC3FBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AB1E6F08-EDA8-4AD8-9C15-B481AAEC3FBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB1E6F08-EDA8-4AD8-9C15-B481AAEC3FBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -33,6 +29,10 @@ Global
 		{D7E131B6-BA8E-4AD4-8456-0CAD85309859}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D7E131B6-BA8E-4AD4-8456-0CAD85309859}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D7E131B6-BA8E-4AD4-8456-0CAD85309859}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8741B50E-AB3C-4A14-9164-6A044A114DD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8741B50E-AB3C-4A14-9164-6A044A114DD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8741B50E-AB3C-4A14-9164-6A044A114DD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8741B50E-AB3C-4A14-9164-6A044A114DD4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
