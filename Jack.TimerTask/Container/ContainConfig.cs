@@ -1,11 +1,7 @@
 ﻿using Autofac;
 using Autofac.Extras.Quartz;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Jack.TimerTask.Service;
-using Quartz.Logging;
 using Jack.TimerTask.JobScheduler;
+using Quartz.Logging;
 
 namespace Jack.TimerTask.Jobs
 {

@@ -1,6 +1,5 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using Jack.TimerTask.Container;
 using Jack.TimerTask.Extentions;
 using Jack.TimerTask.Jobs;
 using Jack.TimerTask.JobScheduler;
@@ -64,16 +63,15 @@ namespace Jack.TimerTask
                      .AddCommandLine(args);
                  })
                  .ConfigureServices((hostContext, services) =>
-                 { 
+                 {
                      services.AddHttpContextAccessor()
                          .AddAutofac()
                          .AddHttpUserCenterService()
-                   
+
                          .Configure<JobConfig>(hostContext.Configuration.GetSection("CornJobScheduler"))
                          .AddHostedService<CornJobSchedulerHostedService>()
                          .AddSingleton<ICornJobScheduler, CornJobScheduler>()
-                         .AddHttpClient()
-                         .Configure<AppSettingConfiguration>(hostContext.Configuration.GetSection("AppSettings"));
+                         .AddHttpClient();
                      
                  })
                   .ConfigureLogging(logging =>
