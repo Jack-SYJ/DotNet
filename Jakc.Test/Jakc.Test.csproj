@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MySql.Data" Version="8.0.26" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Jakc.Extend.MySQL\Jack.Extend.MySQL.csproj" />
   </ItemGroup>
 
