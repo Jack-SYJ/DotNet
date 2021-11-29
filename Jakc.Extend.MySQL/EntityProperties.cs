@@ -20,6 +20,6 @@ namespace Jack.Extend.MySQL
         /// <summary>
         /// 字段信息 （字段名,字段反射信息,字段是否自增）
         /// </summary>
-        public List<Tuple<string, PropertyInfo, bool>> Fields { get; set; }
+        public List<Tuple<string, PropertyInfo>> Fields { get; set; }
     }
 }

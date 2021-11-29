@@ -25,8 +25,7 @@ namespace Jack.Extend.MySQL
         /// <returns></returns>
         private static string CreateSql<T>(IEnumerable<T> values) where T : class
         {
-            var entityProperties = GetEntity(values.First().GetType());
-            //var fieldBuilder = new StringBuilder();
+            var entityProperties = GetEntity(values.First().GetType());;
             var valueBuilder = new StringBuilder();
             var index = 0;
             var count = values.Count();
@@ -35,7 +34,7 @@ namespace Jack.Extend.MySQL
                 index++;
                 valueBuilder.Append("(");
                 var isAppend = false;
-                foreach (var (name, propertiy, isPrimary) in entityProperties.Fields)
+                foreach (var (name, propertiy) in entityProperties.Fields)
                 {
                     var value = propertiy.GetValue(item);
                     if (isAppend)
@@ -80,7 +79,7 @@ namespace Jack.Extend.MySQL
         /// <typeparam name="T"></typeparam>
         /// <param name="values"></param>
         /// <returns></returns>
-        private static string CreateParameterSql<T, P>(IEnumerable<T> values, List<P> dbParameters) where T : class where P : DbParameter, new()
+        private static string CreateParameterSql<T, P>(IEnumerable<T> values) where T : class where P : DbParameter
         {
           
             var entityProperties = GetEntity(values.First().GetType());
@@ -92,7 +91,7 @@ namespace Jack.Extend.MySQL
                 index++;
                 valueBuilder.Append("(");
                 var isAppend = false;
-                foreach (var (name, propertiy, isPrimary) in entityProperties.Fields)
+                foreach (var (name, propertiy) in entityProperties.Fields)
                 {
                     var value = propertiy.GetValue(item);
 
@@ -145,11 +144,11 @@ namespace Jack.Extend.MySQL
                 var entityProperties = new EntityProperties();
                 entityProperties.Entity = entity;
                 entityProperties.TableName = GetCustomName(entity);
-                entityProperties.Fields = new List<Tuple<string, PropertyInfo, bool>>();
+                entityProperties.Fields = new List<Tuple<string, PropertyInfo>>();
                 //获取字段
                 foreach (var propertiy in entity.GetProperties())
                 {
-                    entityProperties.Fields.Add(new Tuple<string, PropertyInfo, bool>(GetCustomName(propertiy), propertiy, false));
+                    entityProperties.Fields.Add(new Tuple<string, PropertyInfo>(GetCustomName(propertiy), propertiy));
                 }
                 CacheTypeDic.TryAdd(entity, entityProperties);
                 return entityProperties;
@@ -207,18 +206,6 @@ namespace Jack.Extend.MySQL
                 return entityType.Name;
             }
         }
-
-
-        /// <summary>
-        /// 获取实体名称或属性名称
-        /// </summary>
-        /// <param name="entityType"></param>
-        /// <returns></returns>
-        private static string GetName(Type entityType)
-        {
-            return entityType.Name;
-        }
-
 
     }
 }

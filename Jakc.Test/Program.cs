@@ -81,7 +81,7 @@ namespace Jakc.Test
 
 
                     var para = new MySqlParameter();
-                    batch.(datatable, command,para );
+                   // batch.GenerateInserSql(datatable, command,para );
 
 
                     if (command.CommandText == string.Empty)
