@@ -13,6 +13,12 @@ namespace Jakc.Test
         static void Main(string[] args)
         {
 
+            IEnumerableTest();
+            Console.ReadKey();
+        }
+
+        static void DataTableTest()
+        {
             var datatable = new DataTable();
             datatable.TableName = "AppAuth";
             datatable.Columns.Add(new DataColumn
@@ -38,6 +44,17 @@ namespace Jakc.Test
                 DataType = typeof(string),
                 MaxLength = 50
             });
+            datatable.Columns.Add(new DataColumn
+            {
+                ColumnName = "CreateTime",
+                DataType = typeof(DateTime),
+            });
+
+            datatable.Columns.Add(new DataColumn
+            {
+                ColumnName = "UpdateTime",
+                DataType = typeof(DateTime?).GetGenericArguments()[0],
+            });
 
             for (int i = 0; i < 10; i++)
             {
@@ -46,60 +63,70 @@ namespace Jakc.Test
                 array.Add($"id_{i}");
                 array.Add($"name_{i}");
                 array.Add($"name#@_''\"ten_{i}");
+                array.Add(DateTime.Now);
+                array.Add(null);
                 datatable.LoadDataRow(array.ToArray(), true);
             }
 
-            List<Table1> table1s = new List<Table1>();
-            for (int i = 0; i < 3; i++)
-            {
-                table1s.Add(new Table1
-                {
-                    id = i.ToString(),
-                    date = DateTime.Now,
-                    nullDate = null,
-                    GetV = i + 100
-                });
-                Thread.Sleep(1000);
-            }
             var batch = new MySqlBatcher();
-
-            // var table = new DataTable();
 
             using (var connection = new MySqlConnection("server=9.134.119.192;userid=root;pwd=Tencent@2020;port=3306;database=test2;sslmode=none;"))
             {
                 connection.Open();
-                using (var command = new MySqlCommand())
+                int count = 0;
+                using (var command = connection.CreateCommand())
                 {
-                    if (command == null)
-                    {
-                        throw new ArgumentException("command");
-                    }
-                    command.Connection = connection;
-
-
-                    command.Transaction = null;
-
-
-                    var para = new MySqlParameter();
-                   // batch.GenerateInserSql(datatable, command,para );
-
+                    batch.GenerateInserSql<MySqlParameter>(command, datatable);
 
                     if (command.CommandText == string.Empty)
                     {
                         return;
                     }
 
-
-                    command.ExecuteNonQuery();
+                    count = command.ExecuteNonQuery();
                 }
 
-
-
-
-                //var result = table1s.CreateBulkSql();
-
-                Console.WriteLine("Hello World!");
+                Console.WriteLine($" insert count [{count}]");
             }
         }
+        static void IEnumerableTest()
+        {
+
+            List<AppAuth> appAuths=new List<AppAuth>();
+            for (int i = 0; i < 20; i++)
+            {
+                appAuths.Add(new AppAuth
+                {
+                    appId = i + 154,
+                    accessName = "accessName&*^%*^*&^%%*)(*",
+                    tenancyId = "tencent''\"\"",
+                    CreateTime=DateTime.Now,
+                    UpdateTime=(i%2==0)?DateTime.Now:null
+                }); 
+            }
+
+            var batch = new MySqlBatcher();
+
+            using (var connection = new MySqlConnection("server=9.134.119.192;userid=root;pwd=Tencent@2020;port=3306;database=test2;sslmode=none;"))
+            {
+                connection.Open();
+                int count = 0;
+                using (var command = connection.CreateCommand())
+                {
+                   var result= batch.GenerateInserSql<AppAuth,MySqlParameter>(appAuths);
+
+                    command.CommandText = result.Item1;
+                    if (result.Item2.Count > 0)
+                    {
+                        command.Parameters.AddRange(result.Item2.ToArray());
+                    }
+
+                    count = command.ExecuteNonQuery();
+                }
+
+                Console.WriteLine($" insert count [{count}]");
+            }
+        }
+
     }
 }

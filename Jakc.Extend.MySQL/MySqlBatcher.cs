@@ -16,17 +16,23 @@ namespace Jack.Extend.MySQL
     public sealed class MySqlBatcher
     {
         private static ConcurrentDictionary<Type, EntityProperties> CacheTypeDic = new ConcurrentDictionary<Type, EntityProperties>();
+        private static ConcurrentDictionary<Type, DbType> dbTypeDic = new ConcurrentDictionary<Type, DbType>();
+
+        private Type dateTimeType = typeof(DateTime);
+        private Type nullableDateTimeType = typeof(DateTime?);
+        private Type stringType = typeof(string);
+        private static Type  nullable  =typeof(Nullable<>);
 
         /// <summary>
-        /// 生成插入数据的sql语句。
+        /// 生成插入数据的sql语句，并将语句赋值到Command
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="command"></param>
         /// <param name="table"></param>
         /// <param name="dbParameter"></param>
-        public void GenerateInserSql<T>(IDbCommand command, DataTable table) where T:DbParameter
+        public void GenerateInserSql<T>(IDbCommand command, DataTable table) where T : DbParameter
         {
-            if (table==null || table.Rows.Count == 0)
+            if (table == null || table.Rows.Count == 0)
             {
                 throw new ArgumentNullException("DataTable中无数据");
             }
@@ -78,7 +84,7 @@ namespace Jack.Extend.MySQL
                 values.Append(")");
                 i++;
             }
-            command.CommandText= string.Format("INSERT INTO {0}({1}) VALUES {2}", table.TableName, names, values);
+            command.CommandText = string.Format("INSERT INTO {0}({1}) VALUES {2}", table.TableName, names, values);
         }
 
         /// <summary>
@@ -95,46 +101,56 @@ namespace Jack.Extend.MySQL
                 throw new ArgumentNullException("datas must be has value");
             }
             var values = new StringBuilder();
-            var types = new List<DbType>();
             List<P> parameters = new List<P>();
 
             Type typeT = typeof(T);
 
+           
+            var entity = GetEntity(typeT);
             var count = datas.Count();
-            var entity=GetEntity(typeT);
-
-            var index = 0;
+            var row = 0;
             foreach (var item in datas)
             {
-                index++;
+                row++;
+                int colnum = 0;
                 var isAppend = false;
                 foreach (var (name, propertiy) in entity.Fields)
                 {
+                    colnum++;
                     var value = propertiy.GetValue(item);
-                    if (isAppend)
+                    if (isAppend == false)
+                    {
+                        values.Append("(");
+                    }
+                    else
                     {
                         values.Append(",");
                     }
+                    isAppend = true;
                     if (value == null)
                     {
                         values.Append("NULL");
                     }
                     else
                     {
-                        if (value is string)
+                        var parameter = CreateParameter<P>(propertiy, value, row, colnum);
+                        if (parameter != null)
                         {
-                            var strV = value.ToString();
-                            strV.Replace("\"", " "); //将双引号改为空格
-                            values.Append($"\"{strV}\"");
+                            values.Append(parameter.ParameterName);
+                            parameters.Add(parameter);
+                        }
+                        else if (propertiy.PropertyType==stringType)
+                        {
+                            values.AppendFormat("'{0}'", value);
                         }
                         else
                         {
-                            values.Append($"\"{value}\"");
+                            values.Append(value);
                         }
                     }
-                    isAppend = true;
+
                 }
-                if (index != count)
+                if (row != count)
                 {
                     values.Append("),");
                 }
@@ -143,7 +159,7 @@ namespace Jack.Extend.MySQL
                     values.Append(")");
                 }
             }
-            string sql=string.Format("INSERT INTO {0}({1}) VALUES {2}", entity.TableName, string.Join(",",entity.Fields.Select(x=>x.Item1)), values);
+            string sql = string.Format("INSERT INTO {0}({1}) VALUES {2}", entity.TableName, string.Join(",", entity.Fields.Select(x => x.Item1)), values);
             return new Tuple<string, List<P>>(sql, parameters);
         }
 
@@ -169,7 +185,7 @@ namespace Jack.Extend.MySQL
         /// <param name="row"></param>
         /// <param name="col"></param>
         /// <returns></returns>
-        private T CreateParameter<T>(bool isStrType, DbType dbType, object value, int row, int col) where T:DbParameter
+        private T CreateParameter<T>(bool isStrType, DbType dbType, object value, int row, int col) where T : DbParameter
         {
             //如果生成全部的参数，则速度会很慢，因此，只有数据类型为字符串(包含'号)和日期型时才添加参数
             if ((isStrType && value.ToString().IndexOf('\'') != -1) || dbType == DbType.DateTime)
@@ -180,7 +196,33 @@ namespace Jack.Extend.MySQL
                 parameter.Direction = ParameterDirection.Input;
                 parameter.DbType = dbType;
                 parameter.Value = value;
-                return parameter ;
+                return parameter;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 创建参数。
+        /// </summary>
+        /// <param name="isStrType"></param>
+        /// <param name="dbType"></param>
+        /// <param name="value"></param>
+        /// <param name="row"></param>
+        /// <param name="col"></param>
+        /// <returns></returns>
+        private T CreateParameter<T>(PropertyInfo type, object value, int row, int col) where T : DbParameter
+        {
+            //如果生成全部的参数，则速度会很慢，因此，只有数据类型为字符串(包含'号)和日期型时才添加参数
+            if ((type.PropertyType == stringType && value.ToString().IndexOf('\'') != -1) || type.PropertyType == dateTimeType||type.PropertyType== nullableDateTimeType)
+            {
+                dbTypeDic.TryGetValue(type.PropertyType, out DbType dbType);
+                var name = string.Format("@p_{0}_{1}", row, col);
+                var parameter = Activator.CreateInstance<T>();
+                parameter.ParameterName = name;
+                parameter.Direction = ParameterDirection.Input;
+                parameter.DbType = dbType;
+                parameter.Value = value;
+                return parameter;
             }
             return null;
         }
@@ -202,6 +244,17 @@ namespace Jack.Extend.MySQL
                 foreach (var propertiy in entity.GetProperties())
                 {
                     entityProperties.Fields.Add(new Tuple<string, PropertyInfo>(GetCustomName(propertiy), propertiy));
+                    if (!dbTypeDic.ContainsKey(propertiy.PropertyType))
+                    {
+                        if (propertiy.PropertyType.IsGenericType&&propertiy.PropertyType.GetGenericTypeDefinition() == nullable)
+                        {
+                            dbTypeDic.TryAdd(propertiy.PropertyType, (DbType)Enum.Parse(typeof(DbType), propertiy.PropertyType.GetGenericArguments()[0].Name));
+                        }
+                        else
+                        {
+                            dbTypeDic.TryAdd(propertiy.PropertyType, (DbType)Enum.Parse(typeof(DbType), propertiy.PropertyType.Name));
+                        }
+                    }
                 }
                 CacheTypeDic.TryAdd(entity, entityProperties);
                 return entityProperties;
